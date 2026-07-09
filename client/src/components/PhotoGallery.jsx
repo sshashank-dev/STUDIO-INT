@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const photos = [
@@ -11,17 +11,9 @@ const photos = [
     "https://images.squarespace-cdn.com/content/v1/5627ec30e4b0dc30fe462054/1587598583512-0SN6ZIGF6YP9U1XDHITB/03_JHID_Albemarle+Terrace.jpg?format=2500w",
 ];
 
-// Custom Thin Arrow Component
 const ThinArrow = ({ direction }) => (
-    <svg
-        width="40" height="80" viewBox="0 0 20 40"
-        fill="none" stroke="black" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"
-    >
-        {direction === 'left' ? (
-            <path d="M15 5L5 20L15 35" />
-        ) : (
-            <path d="M5 5L15 20L5 35" />
-        )}
+    <svg width="40" height="80" viewBox="0 0 20 40" fill="none" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+        {direction === 'left' ? <path d="M15 5L5 20L15 35" /> : <path d="M5 5L15 20L5 35" />}
     </svg>
 );
 
@@ -29,8 +21,30 @@ export default function PhotoGallery() {
     const [index, setIndex] = useState(0);
     const [hoveredSide, setHoveredSide] = useState(null);
 
-    const next = () => setIndex((i) => (i + 1) % photos.length);
-    const prev = () => setIndex((i) => (i - 1 + photos.length) % photos.length);
+    // Audio ref
+    const audioRef = useRef(null);
+
+    // Initialize audio
+    useEffect(() => {
+        audioRef.current = new Audio("/click.mp3"); // Ensure click.mp3 is in your /public folder
+    }, []);
+
+    const playSound = () => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(() => { }); // Catch prevents console errors if user hasn't interacted yet
+        }
+    };
+
+    const next = () => {
+        playSound();
+        setIndex((i) => (i + 1) % photos.length);
+    };
+
+    const prev = () => {
+        playSound();
+        setIndex((i) => (i - 1 + photos.length) % photos.length);
+    };
 
     return (
         <section
@@ -45,19 +59,17 @@ export default function PhotoGallery() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15, ease: "linear" }}
+                    transition={{ duration: 0, ease: "linear" }}
                     className="absolute inset-0 w-full h-full object-cover"
                 />
             </AnimatePresence>
 
-            {/* Typography Overlay */}
             <div className="absolute top-10 left-10 z-10 pointer-events-none">
                 <h1 className="text-4xl font-light tracking-[0.2em] uppercase leading-tight text-white/90">
-                    <br />Helgerson<br />Interior<br />Design
+                    <br />SOME<br />Interior<br />Design
                 </h1>
             </div>
 
-            {/* Left Trigger Area */}
             <div onClick={prev} className="absolute left-0 top-0 w-1/2 h-full z-20 flex items-center justify-start pl-10">
                 {hoveredSide === 'left' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -66,7 +78,6 @@ export default function PhotoGallery() {
                 )}
             </div>
 
-            {/* Right Trigger Area */}
             <div onClick={next} className="absolute right-0 top-0 w-1/2 h-full z-20 flex items-center justify-end pr-10">
                 {hoveredSide === 'right' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
