@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { useSmoothScroll } from "../hooks/useSmoothScroll";
 import PhotoGallery from "../components/PhotoGallery";
-import FurnitureScene from "../components/components/FurnitureScene";
+import FurnitureScene from "../components/FurnitureScene";
 import Navbar from "../components/Navbar"; // IMPORTED NAV
 import ConsultationSection from "../components/ConsultationSection";
 
 import Footer from "../components/footer";
 
-const InteriorApp = lazy(() => import("../components/components/InteriorApp"));
+const InteriorApp = lazy(() => import("../components/InteriorApp"));
 
 export default function Home() {
     useSmoothScroll();
