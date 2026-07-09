@@ -7,7 +7,7 @@ import FurnitureScene from "../components/FurnitureScene";
 import Navbar from "../components/Navbar"; // IMPORTED NAV
 import ConsultationSection from "../components/ConsultationSection";
 
-import Footer from "../components/footer";
+import Footer from "../components/Footer";
 
 const InteriorApp = lazy(() => import("../components/InteriorApp"));
 
